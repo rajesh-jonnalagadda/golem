@@ -6,14 +6,21 @@ import { Home, Settings, RocketLaunch, Add } from "@mui/icons-material";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTheme } from "@mui/material/styles";
-const Sidebar = () => {
+
+
+type SidebarProps = {
+  apiId: number;
+};
+
+const Sidebar = ({apiId}:SidebarProps) => {
+
   const pathname = usePathname();
   const theme=useTheme();
 
   const navigationLinks = [
-    { name: "Overview", href: "/apis/overview", icon: <Home fontSize="small" /> },
-    { name: "Settings", href: "/apis/settings", icon: <Settings fontSize="small" /> },
-    { name: "Deployments", href: "/apis/deployments", icon: <RocketLaunch fontSize="small" /> },
+    { name: "Overview", href: `/apis/${apiId}/overview`, icon: <Home fontSize="small" /> },
+    { name: "Settings", href: `/apis/${apiId}/settings`, icon: <Settings fontSize="small" /> },
+    { name: "Deployments", href: `/apis/${apiId}/deployments`, icon: <RocketLaunch fontSize="small" /> },
   ];
 
   return (
@@ -77,7 +84,7 @@ const Sidebar = () => {
         Routes
       </Typography>
 
-      <Link href={"/apis/new-route"}>
+      <Link href={`/apis/${apiId}/new-route`}>
         <Button
         variant="outlined"
         sx={{

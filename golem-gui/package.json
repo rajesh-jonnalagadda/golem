@@ -2,11 +2,21 @@
   "name": "my-app",
   "version": "0.1.0",
   "private": true,
+  "react-app-configuration": {
+    "web": {
+      "env": {
+        "REACT_APP_API_URL": "http://localhost:3000"
+      }
+    }
+  },
+  
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "tauri": "tauri dev",
+    "tauri:build": "tauri build"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -32,6 +42,9 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@tauri-apps/cli": "^2.1.0",
+    "tailwindcss-animate": "^1.0.7",
+    "tauri": "^0.15.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

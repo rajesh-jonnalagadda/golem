@@ -1,157 +1,217 @@
-import { Box, Button, Typography, TextField, RadioGroup, FormControlLabel, Radio, Paper, IconButton } from '@mui/material';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import FolderIcon from '@mui/icons-material/Folder';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { useState } from 'react';
+"use client";
+
+import React, { useState } from "react";
+import {
+  Box,
+  Button,
+  Typography,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+  TextField,
+  Paper,
+  IconButton,
+} from "@mui/material";
+import UploadFileIcon from "@mui/icons-material/UploadFile";
+import FolderIcon from "@mui/icons-material/Folder";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 export default function CreateComponentForm() {
-    const [files, setFiles] = useState<File[]>([]);
-    const [wasmFile, setWasmFile] = useState<File | null>(null);
-  const [componentName, setComponentName] = useState('');
-  const [type, setType] = useState('durable');
+  const [wasmFile, setWasmFile] = useState<File | null>(null);
+  const [files, setFiles] = useState<File[]>([]);
 
-  const handleWasmUpload = (e: any) => {
-    setWasmFile(e.target.files[0]);
+  const handleWasmUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setWasmFile(e.target.files[0]);
+    }
   };
 
   const handleFilesUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const uploadedFiles = Array.from(e.target.files || []) as File[];
-    setFiles((prevFiles) => [...prevFiles, ...uploadedFiles]);
+    const uploadedFiles = Array.from(e.target.files || []);
+    setFiles((prev) => [...prev, ...uploadedFiles]);
   };
-  
 
   const handleFileDelete = (index: number) => {
-    const updatedFiles = [...files];
-    updatedFiles.splice(index, 1);
-    setFiles(updatedFiles);
+    setFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
   return (
-    <Paper elevation={3} sx={{ p: 4, maxWidth: '600px', mx: 'auto', mt: 5, borderRadius: 2 }}>
-      <Typography variant="h5" fontWeight="bold" gutterBottom>
-        Create a New Component
-      </Typography>
-
-      {/* Project and Component Name */}
-      <Box sx={{ mb: 3 }}>
-        <TextField
-          select
-          label="Project"
-          SelectProps={{ native: true }}
-          variant="outlined"
-          fullWidth
-          sx={{ mb: 2 }}
-        >
-          <option>First</option>
-          <option>Second</option>
-        </TextField>
-        <TextField
-          label="Component Name"
-          placeholder="Enter component name"
-          variant="outlined"
-          fullWidth
-          value={componentName}
-          onChange={(e) => setComponentName(e.target.value)}
-        />
-      </Box>
-
-      {/* Type Section */}
-      <Box sx={{ mb: 3 }}>
-        <Typography variant="body1" fontWeight="medium">
-          Type
+    <Box>
+      <Paper
+        elevation={3}
+        sx={{
+          maxWidth: "800px",
+          width: "100%",
+          mx: "auto",
+          mt: 5,
+          p: 3,
+          borderRadius: "8px",
+        }}
+      >
+        {/* Header */}
+        <Typography variant="h5" sx={{ mb: 2, borderBottom: "1px solid #444", pb: 2 }}>
+          Create a new Component
         </Typography>
-        <RadioGroup
-          row
-          value={type}
-          onChange={(e) => setType(e.target.value)}
-        >
-          <FormControlLabel
-            value="durable"
-            control={<Radio />}
-            label="Durable"
-          />
-          <FormControlLabel
-            value="ephemeral"
-            control={<Radio />}
-            label="Ephemeral"
-          />
-        </RadioGroup>
-      </Box>
-
-      {/* WASM Binary Upload */}
-      <Box sx={{ mb: 3 }}>
-        <Typography variant="body1" fontWeight="medium" gutterBottom>
-          WASM Binary
+        <Typography variant="body2" sx={{ mb: 3 }}>
+          Components are the building blocks for your project
         </Typography>
-        <Button
-          variant="contained"
-          component="label"
-          startIcon={<CloudUploadIcon />}
-          sx={{ mb: 1 }}
-        >
-          Upload WASM
-          <input
-            type="file"
-            accept=".wasm"
-            hidden
-            onChange={handleWasmUpload}
-          />
-        </Button>
-        {wasmFile && (
-          <Typography variant="body2">{wasmFile.name}</Typography>
-        )}
-      </Box>
 
-      {/* Initial Files Upload */}
-      <Box sx={{ mb: 3 }}>
-        <Typography variant="body1" fontWeight="medium" gutterBottom>
-          Initial Files
-        </Typography>
-        <Button
-          variant="contained"
-          component="label"
-          startIcon={<CloudUploadIcon />}
-          sx={{ mb: 1 }}
-        >
-          Upload Files
-          <input
-            type="file"
-            hidden
-            multiple
-            onChange={handleFilesUpload}
-          />
-        </Button>
-        <Box>
-          {files.map((file, index) => (
-            <Box
-              key={index}
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-              sx={{ mt: 1 }}
+        {/* Form */}
+        <form>
+          {/* Project and Component Name */}
+          <Box display="flex" gap={2} mb={3}>
+            <TextField
+              label="Project"
+              variant="outlined"
+              fullWidth
+              defaultValue="my proj"
+              InputLabelProps={{
+               
+              }}
+              InputProps={{
+                sx: {borderColor: "#444" },
+              }}
+            />
+            <TextField
+              label="Component Name"
+              variant="outlined"
+              fullWidth
+              
+              InputProps={{
+                sx: { borderColor: "#444" },
+              }}
+            />
+          </Box>
+
+          {/* Type Selection */}
+          <Box mb={3}>
+            <Typography variant="body1" mb={1}>
+              Type
+            </Typography>
+            <RadioGroup row defaultValue="durable">
+              <FormControlLabel
+                value="durable"
+                control={<Radio />}
+                label={
+                  <Box>
+                    <Typography>
+                      <b>Durable</b>
+                    </Typography>
+                    <Typography variant="caption" color="gray">
+                      Workers are persistent and executed with transactional guarantees
+                    </Typography>
+                  </Box>
+                }
+              />
+              <FormControlLabel
+                value="ephemeral"
+                control={<Radio  />}
+                label={
+                  <Box>
+                    <Typography>
+                      <b>Ephemeral</b>
+                    </Typography>
+                    <Typography variant="caption">
+                      Workers are transient and executed normally
+                    </Typography>
+                  </Box>
+                }
+              />
+            </RadioGroup>
+          </Box>
+
+          {/* WASM Binary Upload */}
+          <Box
+            mb={3}
+            textAlign="center"
+            p={2}
+            border="2px dashed #444"
+            borderRadius="8px"
+            sx={{ cursor: "pointer" }}
+          >
+            <input
+              type="file"
+              hidden
+              id="wasm-upload"
+              onChange={handleWasmUpload}
+              accept=".wasm"
+            />
+            <label htmlFor="wasm-upload">
+              <UploadFileIcon sx={{ fontSize: 50 }} />
+              <Typography variant="body2" sx={{ mt: 1 }}>
+                {wasmFile ? wasmFile.name : "Upload Component WASM"}
+              </Typography>
+              <Typography variant="caption" >
+                File up to 50MB
+              </Typography>
+            </label>
+          </Box>
+
+          {/* Initial Files Upload */}
+          <Box mb={3} p={2} border="2px dashed #444" borderRadius="8px" textAlign="center">
+            <input
+              type="file"
+              multiple
+              hidden
+              id="file-upload"
+              onChange={handleFilesUpload}
+            />
+            <label htmlFor="file-upload">
+              <Typography variant="body2">Select or Drop files</Typography>
+            </label>
+          </Box>
+
+          {/* File List */}
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            border="1px solid #444"
+            borderRadius="8px"
+            p={2}
+            mb={3}
+          >
+            <Typography variant="caption" color="gray">
+              Total Files: {files.length}
+            </Typography>
+            <Button
+              variant="contained"
+              startIcon={<FolderIcon />}
             >
-              <Typography variant="body2">{file.name}</Typography>
-              <IconButton color="error" onClick={() => handleFileDelete(index)}>
-                <DeleteIcon />
-              </IconButton>
-            </Box>
-          ))}
-        </Box>
-      </Box>
+              New Folder
+            </Button>
+          </Box>
 
-      {/* Action Buttons */}
-      <Box display="flex" justifyContent="space-between">
-        <Button
-          variant="outlined"
-          startIcon={<FolderIcon />}
-          sx={{ mr: 2 }}
-        >
-          New Folder
-        </Button>
-        <Button variant="contained" color="primary" size="large">
-          Create Component
-        </Button>
-      </Box>
-    </Paper>
+          {/* Footer */}
+          <Box display="flex" justifyContent="space-between" alignItems="center">
+            <Box>
+              {files.map((file, index) => (
+                <Box
+                  key={index}
+                  display="flex"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  p={1}
+                  borderBottom="1px solid #444"
+                >
+                  <Typography variant="body2">{file.name}</Typography>
+                  <IconButton onClick={() => handleFileDelete(index)} color="error">
+                    <DeleteOutlineIcon />
+                  </IconButton>
+                </Box>
+              ))}
+            </Box>
+            <Button
+              variant="contained"
+              startIcon={<CloudUploadIcon />}
+           
+            >
+              Create
+            </Button>
+          </Box>
+        </form>
+      </Paper>
+    </Box>
   );
 }

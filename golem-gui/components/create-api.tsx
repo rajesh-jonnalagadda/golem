@@ -4,21 +4,46 @@ import {
   Button,
   TextField,
   Typography,
-  MenuItem,
-  Select,
-  InputLabel,
-  FormControl,
   Container,
   Paper,
 } from "@mui/material";
+import { fetcher, getErrorMessage } from "@/lib/utils";
 
-const CreateAPI = () => {
+const CreateAPI = ({onCreation}:{onCreation?:()=>void}) => {
   const [apiName, setApiName] = useState("");
   const [version, setVersion] = useState("0.1.0");
+  const  [error, setError] = useState("");
 
-  const handleCreateAPI = () => {
-    console.log("Creating API with:", { apiName, version });
-    //add integration
+  const handleCreateAPI =async() => {
+    try{
+      const response = await fetcher('?path=api/definitions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          "id": apiName,
+          "version": version,
+          "routes": [],
+          "draft": true
+        }),
+      })
+
+      if(response.status>300){
+        const error = getErrorMessage(response.data);
+        setError(error);
+        return;
+      }
+
+      setError("");
+      onCreation?.();
+      console.log("result===>", response)
+      return;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  }catch(err){
+    console.log("Err", err);
+    setError("Something went wrong!. please try again");
+  }
   };
 
   return (
@@ -30,6 +55,9 @@ const CreateAPI = () => {
         <Typography variant="body2" color="text.secondary" mb={3}>
           Export worker functions as a REST API
         </Typography>
+
+        {/* Project Dropdown */}
+
         {/* API Name Input */}
         <TextField
           label="API Name"
@@ -55,6 +83,8 @@ const CreateAPI = () => {
         <Typography variant="caption" color="text.secondary">
           Version prefix for your API
         </Typography>
+        {error && <Typography className="text-red-500">{error}</Typography>}
+
 
         {/* Create API Button */}
         <Box display="flex" justifyContent="flex-end" mt={3}>

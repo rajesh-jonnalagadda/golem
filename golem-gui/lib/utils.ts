@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { GolemError } from "@/types/api";
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
@@ -8,7 +9,12 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export const getErrorMessage = (error: GolemError): string => {
+export const getErrorMessage = (error: GolemError | string): string => {
+
+  if(typeof error === "string") {
+    return error;
+  }
+
   if (error.golemError) {
     return `${error.golemError.type}: ${error.golemError.details}`;
   }
@@ -24,6 +30,5 @@ export const getErrorMessage = (error: GolemError): string => {
   return 'An unknown error occurred';
 };
 
-export const fetcher = (url:string) => fetch(`${BACKEND_URL}${url}`).then((res) => res.json());
-
+export const fetcher = (url:string, options?:RequestInit) => fetch(`/api/proxy${url}`, options ).then((res) => res.json());
 
