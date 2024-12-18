@@ -13,12 +13,7 @@ type NAV_LINK = {
 };
 
 const links = [
-  { name: "Home", to: "/" },
   { name: "Overview", to: "/overview" },
-  { name: "Components", to: "/components" },
-  { name: "Workers", to: "/workers" },
-  { name: "APIs", to: "/apis" },
-  { name: "Plugins", to: "/plugins" },
 ] as NAV_LINK[];
 
 

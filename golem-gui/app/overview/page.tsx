@@ -47,6 +47,9 @@ const ProjectDashboard = () => {
   const handleOpen = (type: string) => setOpen(type);
   const handleClose = () => setOpen(null);
 
+
+  console.log("open======>", open);
+
   return (
     <Box sx={{ minHeight: "100vh", marginTop: "2rem" }} px={10}>
       <Grid2 container spacing={3}>
